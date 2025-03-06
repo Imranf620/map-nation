@@ -180,7 +180,7 @@ export default function SingleGame() {
         </div>
 
         {/* Tabs */}
-        <div className="flex mt-8 border-b border-gray-800">
+        <div className="flex flex-wrap mt-8 border-b border-gray-800">
           <button className="px-4 py-2 text-yellow-400 border-b-2 border-yellow-400">
             DESCRIPTION
           </button>
