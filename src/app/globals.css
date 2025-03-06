@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+
+body{
+  background-color: #000000;
+  color: white;
+}
+
+.logo{
+  font-size: 30px;
+  background: linear-gradient(90deg, #883364, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo:hover{
+  color: red !important;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: red;
+  transition: all 1s ease-in-out;
+}
