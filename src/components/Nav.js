@@ -127,15 +127,15 @@ const Nav = () => {
   };
 
   return (
-    <div className="w-full md:w-[80%] relative mx-auto py-4 px-4 md:px-0">
+    <div className="w-full md:w-[80%] absolute top-0 left-0 bg-black md:bg-transparent z-[10000] md:relative mx-auto py-4 px-4 md:px-0">
       <div className="flex flex-col md:flex-row w-full justify-between items-center">
         {/* Mobile Menu Toggle */}
         <div className="md:hidden w-full flex justify-between items-center mb-4">
           <div
             onClick={navigate}
             className="relative group"
-            // onMoush1eEnter={() => setIsHovered(true)}
-            // onMouseLeave={() => setIsHovered(false)}
+            onMoush1eEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
             <h1
               className={`
