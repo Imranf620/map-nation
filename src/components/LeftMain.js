@@ -23,7 +23,7 @@ export const gameData = [
     detail: [
       {
         id: "game-001",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/header-35-1068x604.jpg",
+        img: "/assets/header-35-1068x604.jpg",
         title: "My New Daughters Lover Reboot [v0.82]",
         date: "March 6, 2025",
         status: "ON-GOING",
@@ -31,7 +31,7 @@ export const gameData = [
       },
       {
         id: "game-002",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/header-37-1068x377.jpg",
+        img: "/assets/header-37-1068x377.jpg",
         title: "My Femboy Roommate [v1.1 Final]",
         date: "March 6, 2025",
         status: "ON-GOING",
@@ -40,7 +40,7 @@ export const gameData = [
       },
       {
         id: "game-003",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/header-38-1068x601.jpg",
+        img: "/assets/sakurai.jpg",
         title: "Sluttown USA: Hometown Corruption [v0.45]",
         date: "March 6, 2025",
         status: "GAMES",
@@ -48,7 +48,7 @@ export const gameData = [
       },
       {
         id: "game-004",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/header-19.jpg",
+        img: "/assets/header-19.jpg",
         title: "The Caretaker [S2 v0.36 Public]",
         date: "March 6, 2025",
         status: "ON-GOING",
@@ -56,7 +56,7 @@ export const gameData = [
       },
       {
         id: "game-005",
-        img: "https://fap-nation.org/wp-content/uploads/2024/09/header-327.jpg)",
+        img: "/assets/header-327.jpg",
         title: "My Femboy Roommate [v1.1 Final]",
         date: "March 5, 2025",
         status: "RECOMMENDED",
@@ -70,7 +70,7 @@ export const gameData = [
     detail: [
       {
         id: "anim-001",
-        img: "https://fap-nation.org/wp-content/uploads/2024/07/header-42-1068x601.jpg",
+        img: "/assets/smphony.jpg",
         title: "My New Daughters Lover Reboot [v0.82]",
         date: "March 6, 2025",
         status: "ON-GOING",
@@ -78,7 +78,7 @@ export const gameData = [
       },
       {
         id: "anim-002",
-        img: "https://fap-nation.org/wp-content/uploads/2024/05/header-557-1068x601.jpg",
+        img: "/assets/snowstorm.jpg",
         title: "My Femboy Roommate [v1.1 Final]",
         date: "March 6, 2025",
         status: "ON-GOING",
@@ -87,7 +87,7 @@ export const gameData = [
       },
       {
         id: "anim-003",
-        img: "https://fap-nation.org/wp-content/uploads/2024/03/header-330-1068x289.jpg",
+        img: "/assets/seduction.jpg",
         title: "Sluttown USA: Hometown Corruption [v0.45]",
         date: "March 6, 2025",
         status: "GAMES",
@@ -95,7 +95,7 @@ export const gameData = [
       },
       {
         id: "anim-004",
-        img: "https://fap-nation.org/wp-content/uploads/2024/11/header-113-696x393.jpg",
+        img: "/assets/three.jpg",
         title: "The Caretaker [S2 v0.36 Public]",
         date: "March 6, 2025",
         status: "ON-GOING",
@@ -104,7 +104,7 @@ export const gameData = [
       },
       {
         id: "anim-005",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/HEADDER-3-1068x601.jpg'",
+        img: "/assets/nyuex.jpg",
         title: "A Family Venture [v0.09 v2 Beta]",
         date: "March 5, 2025",
         status: "RECOMMENDED",
@@ -228,7 +228,7 @@ const GamesWebsite = () => {
           <Image
             width={300}
             height={100}
-            src="https://backupfapnation.b-cdn.net/tantaly.gif"
+            src="/assets/tantaly.gif"
             alt="Advertisement"
             className="w-full h-full object-contain"
             unoptimized

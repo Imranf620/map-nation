@@ -1,7 +1,6 @@
 import React from "react";
 import LeftMain from "./LeftMain";
 import RightMain from "./RightMain";
-import Footer from "./footer";
 
 const Main = () => {
   return (

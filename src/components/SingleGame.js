@@ -299,7 +299,7 @@ export default function SingleGame() {
                         alt={item.title}
                         width={300}
                         height={200}
-                        className="w-full"
+                        className="w-96 h-40"
                         unoptimized
                       />
                       <div className="absolute bottom-0 left-0 bg-red-600 text-white text-xs px-2 py-1">

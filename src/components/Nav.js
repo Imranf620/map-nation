@@ -14,28 +14,28 @@ const detail = [
     detail: [
       {
         id: "game-001",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/header-35-1068x604.jpg",
+        img: "/assets/header-35-1068x604.jpg",
         title: "Renalith in Desire [v1.1] [Completed]",
         status: "completed",
         date: "2015-02-24",
       },
       {
         id: "game-002",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/header-37-1068x377.jpg",
+        img: "/assets/header-37-1068x377.jpg",
         title: "My New MILF Neighbour [v1.0] [Completed]",
         status: "completed",
         date: "2015-02-24",
       },
       {
         id: "game-003",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/header-38-1068x601.jpg",
+        img: "/assets/sakurai.jpg",
         title: "Sparkling Duplicity [Final]",
         status: "completed",
         date: "2015-02-24",
       },
       {
         id: "game-004",
-        img: "https://fap-nation.org/wp-content/uploads/2025/03/header-19.jpg",
+        img: "/assets/header-19.jpg",
         title: "Turning the Page [v1.0.0] [Completed]",
         status: "Recommended",
         date: "2015-02-24",
@@ -48,21 +48,21 @@ const detail = [
     detail: [
       {
         id: "anim-001",
-        img: "https://fap-nation.org/wp-content/uploads/2024/07/header-42-1068x601.jpg",
+        img: "/assets/header-327.jpg",
         title: "Symphony of the Serpent [v23031]",
         status: "completed",
         date: "2015-02-24",
       },
       {
         id: "anim-002",
-        img: "https://fap-nation.org/wp-content/uploads/2024/05/header-557-1068x601.jpg",
+        img: "/assets/smphony.jpg",
         title: "SnowStorm [v0.9 DR]",
         status: "completed",
         date: "2015-02-24",
       },
       {
         id: "anim-003",
-        img: "https://fap-nation.org/wp-content/uploads/2024/03/header-330-1068x289.jpg",
+        img: "/assets/snowstorm.jpg",
         title: "Cybernetic Seduction [Ep.6 Part 1]",
         status: "completed",
         date: "2015-02-24",

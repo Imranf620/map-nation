@@ -8,14 +8,14 @@ const detail = [
     arr: [
       {
         id: "game-001",
-        img: "https://fap-nation.org/wp-content/uploads/2024/08/header-498-1068x601.jpg",
+        img: "/assets/six.jpg",
         title: "Such a Sharp Pain [V0.11.6R]",
         date: "March 3, 2025",
         type: "video"
       },
       {
         id: "game-002",
-        img: "https://fap-nation.org/wp-content/uploads/2024/06/header-586-696x222.jpg",
+        img: "/assets/singleagain.jpg",
         title: "Single again [V1.11.6R]",
         date: "July 1, 2024",
         type: "image"
@@ -27,7 +27,7 @@ const detail = [
     arr: [
       {
         id: "game-003",
-        img: "https://fap-nation.org/wp-content/uploads/2024/06/header-72-696x392.jpg",
+        img: "/assets/couple.jpg",
         title: "Fashion Business [Ep. 4 v10.00 Extra]",
         date: "January 17, 2025",
         type: "video"

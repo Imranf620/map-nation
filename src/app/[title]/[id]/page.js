@@ -2,6 +2,7 @@ import RightMain from "@/components/RightMain";
 import SingleGame from "@/components/SingleGame";
 import React from "react";
 
+
 const page = () => {
   return (
     <div className="flex md:flex-row flex-col pl-10 pr-4">
