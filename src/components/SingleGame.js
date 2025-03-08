@@ -3,28 +3,131 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { gameData } from "./LeftMain";
 import { useParams } from "next/navigation";
 
 export default function SingleGame() {
   const { id } = useParams();
-
-  const [detail, setDetail] = useState({});
-  console.log(id);
+  const [game, setGame] = useState(null);
+  const [relatedGames, setRelatedGames] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const newData = gameData
-      .flatMap((data) => data.detail) // Flatten all `detail` arrays into one array
-      .find((det) => det.id === id); // Find the object with the matching `id`
+    const fetchGameData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/games/single?id=${id}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch game data');
+        }
+        
+        const data = await response.json();
+        setGame(data.game);
+      } catch (err) {
+        console.error('Error fetching game:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setDetail(newData);
-  }, []);
+    const fetchRelatedGames = async () => {
+      try {
+        const response = await fetch('/api/games');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch related games');
+        }
+        
+        const data = await response.json();
+        
+        // Filter out the current game if it exists in the results
+        const filteredGames = data.games.filter(game => game._id !== id);
+        
+        // Get 3 random games from the filtered list
+        const randomGames = getRandomGames(filteredGames, 3);
+        setRelatedGames(randomGames);
+      } catch (err) {
+        console.error('Error fetching related games:', err);
+        // We don't set the main error state here to prevent blocking the main content
+      }
+    };
+
+    if (id) {
+      fetchGameData();
+      fetchRelatedGames();
+    }
+  }, [id]);
+
+  // Function to get random games from the list
+  const getRandomGames = (games, count) => {
+    const shuffled = [...games].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+
+  // Dummy data for aspects not returned by the API
+  const getDummyContent = () => {
+    return {
+      rating: 4.5,
+      ratingCount: 4291,
+      developer: "With Your Subscribtion",
+      creator: "Sigmund",
+      version: "0.2 Beta",
+      comments: [
+        { id: 1, user: "Anonymous", date: "February 28, 2025", text: "Mega link for Mac is broken." },
+        { id: 2, user: "Anonymous", date: "February 27, 2025", text: "Good new update." },
+        { id: 3, user: "Anonymous", date: "February 26, 2025", text: "Hello, bad game with poor renders and sandbox good from last, dont bullshit." },
+        { id: 4, user: "Anonymous", date: "February 25, 2025", text: "Do you have saved game file that is caught up to best update or near it??" },
+        { id: 5, user: "Anonymous", date: "February 24, 2025", text: "How do I change game resolution since I have a small screen?" }
+      ]
+    };
+  };
+
+  const dummyContent = getDummyContent();
+
+  if (loading) return (
+    <div className="bg-black text-white min-h-screen flex items-center justify-center">
+      <div className="text-xl">Loading game data...</div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="bg-black text-white min-h-screen flex items-center justify-center">
+      <div className="text-xl text-red-500">Error: {error}</div>
+    </div>
+  );
+
+  if (!game) return (
+    <div className="bg-black text-white min-h-screen flex items-center justify-center">
+      <div className="text-xl">Game not found</div>
+    </div>
+  );
+
+  // Format tags from database array to display format
+  const displayTags = game.tags || [];
+  
+  // Get appropriate OS string
+  const getOSString = () => {
+    if (Array.isArray(game.OS)) {
+      return game.OS.join(", ");
+    }
+    return game.OS || "Windows";
+  };
+
+  // Get appropriate languages string
+  const getLanguagesString = () => {
+    if (Array.isArray(game.languages)) {
+      return game.languages.join(", ");
+    }
+    return game.languages || "English";
+  };
 
   return (
     <div className="bg-black text-white min-h-screen">
       <Head>
-        <title>A Family Venture Download</title>
-        <meta name="description" content="Download A Family Venture game" />
+        <title>{game.title} Download</title>
+        <meta name="description" content={`Download ${game.title} game`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -32,16 +135,14 @@ export default function SingleGame() {
         {/* Main game image and controls */}
         <div className="relative mt-4">
           <div className="w-full">
-            {detail.img && (
-              <Image
-                src={detail.img}
-                alt="A Family Venture Game Screenshot"
-                width={800}
-                height={400}
-                className="w-full"
-                unoptimized
-              />
-            )}
+            <Image
+              src={game.url || "/placeholder-game.jpg"}
+              alt={`${game.title} Game Screenshot`}
+              width={800}
+              height={400}
+              className="w-full"
+              unoptimized
+            />
           </div>
           <div className="absolute bottom-0 flex space-x-2 p-2 bg-black bg-opacity-50">
             <button className="p-1">
@@ -63,7 +164,6 @@ export default function SingleGame() {
                 ></path>
               </svg>
             </button>
-            {/* More control buttons */}
           </div>
         </div>
 
@@ -81,29 +181,20 @@ export default function SingleGame() {
                 clipRule="evenodd"
               ></path>
             </svg>
-            March 5, 2025
+            {new Date(game.releaseDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
             <span className="text-xs px-2 py-1 bg-gray-800 text-white">
-              GAMES
+              {game.Genre || "GAMES"}
             </span>
             <span className="text-xs px-2 py-1 bg-gray-800 text-white">
-              ANIMATION
+              {game.category || "ANIMATION"}
             </span>
             <span className="text-xs px-2 py-1 bg-gray-800 text-white">
-              MATCH
+              {game.status || "ON-GOING"}
             </span>
             <span className="text-xs px-2 py-1 bg-gray-800 text-white">
-              ON-GOING
-            </span>
-            <span className="text-xs px-2 py-1 bg-gray-800 text-white">
-              RECOMMENDED
-            </span>
-            <span className="text-xs px-2 py-1 bg-gray-800 text-white">
-              ADULT
-            </span>
-            <span className="text-xs px-2 py-1 bg-gray-800 text-white">
-              WINDOWS
+              {game.OS || "WINDOWS"}
             </span>
           </div>
         </div>
@@ -133,49 +224,43 @@ export default function SingleGame() {
             <span>★</span>
             <span>★</span>
           </div>
-          <span className="text-sm text-gray-400 ml-2">(4,291)</span>
+          <span className="text-sm text-gray-400 ml-2">({dummyContent.ratingCount})</span>
         </div>
 
         {/* Game Title and Description */}
         <h1 className="text-2xl font-bold mt-6">
-          {detail?.title} Free Download Latest Version
+          {game.title} Free Download Latest Version
         </h1>
 
         <p className="text-sm text-gray-300 mt-2">
-          A Family Venture Download Walkthrough Free PC game. This Adult Sex RPG
-          PC Game tells the story of a father who owes a huge amount of money to
-          the Mafia, but when he ends up in prison...
+          {game.description || "Download this game to experience an immersive adventure. This game tells a compelling story with unique gameplay mechanics and stunning visuals..."}
         </p>
 
         {/* Game Info Table */}
         <div className="mt-4 text-sm">
           <div className="flex border-b border-gray-800 py-1">
             <div className="w-28 text-gray-400">Developer:</div>
-            <div>With Your Subscribtion</div>
+            <div>{dummyContent.developer}</div>
           </div>
           <div className="flex border-b border-gray-800 py-1">
             <div className="w-28 text-gray-400">Created by:</div>
-            <div>Sigmund</div>
+            <div>{dummyContent.creator}</div>
           </div>
           <div className="flex border-b border-gray-800 py-1">
             <div className="w-28 text-gray-400">Version:</div>
-            <div>0.2 Beta</div>
+            <div>{dummyContent.version}</div>
           </div>
           <div className="flex border-b border-gray-800 py-1">
             <div className="w-28 text-gray-400">OS:</div>
-            <div>Windows, Mac, Linux, Android</div>
+            <div>{getOSString()}</div>
           </div>
           <div className="flex border-b border-gray-800 py-1">
             <div className="w-28 text-gray-400">Language:</div>
-            <div>English, Spanish</div>
+            <div>{getLanguagesString()}</div>
           </div>
           <div className="flex border-b border-gray-800 py-1">
             <div className="w-28 text-gray-400">Genre:</div>
-            <div>
-              3DCG, Incest, Male Protagonist, Dad sex, Masturbation, Voyeurism,
-              Corruption, Groping, Male domination, MILF, NTR(Avoidable), Sleep
-              sex, Stripping, Vaginal sex, Virgin, Futa and Dick, Trainer
-            </div>
+            <div>{displayTags.join(", ") || game.Genre || "Adventure, RPG"}</div>
           </div>
         </div>
 
@@ -194,13 +279,7 @@ export default function SingleGame() {
         <div className="mt-8">
           <h2 className="text-xl text-center mb-4">Overview</h2>
           <p className="text-sm text-gray-300">
-            Tom owes a huge amount of money to the Mafia, but when he ends up in
-            prison, the responsibility of the debt falls to his wife Ann. He
-            finds Help Ross rescuing his relationship with his brother and two
-            sisters. After losing the house game, there is nothing stopping the
-            development of this strange complex. Niki Mark's tom needs to
-            provide some solid evidence, because if they don&apos;t resolve
-            their money, they will not take what they are used to take away...
+            {game.description || "This game features an immersive storyline with multiple branching paths. Players will experience a rich narrative with complex characters and meaningful choices that affect the game world. With stunning visuals and an engaging soundtrack, this game offers hours of entertainment and replayability."}
           </p>
 
           {/* Rating Section */}
@@ -214,7 +293,7 @@ export default function SingleGame() {
               <span>★</span>
             </div>
             <div className="text-sm text-gray-400">
-              Rating: 4.5 / 5 (User: 35)
+              Rating: {dummyContent.rating} / 5 (User: 35)
             </div>
           </div>
 
@@ -229,116 +308,82 @@ export default function SingleGame() {
           <div className="mt-4">
             <div className="text-sm text-gray-400 mb-2">TAGS:</div>
             <div className="flex flex-wrap gap-2">
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                3DCG
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Corruption
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Groping
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Incest
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Male protagonist
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Male protagonist
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Masturbation
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                MILF
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                NTR
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Futa and dick
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Sleep sex
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Stripping
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Trainer
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Vaginal
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Virgin
-              </span>
-              <span className="text-xs px-2 py-1 bg-red-800 text-white">
-                Voyeurism
-              </span>
+              {displayTags.length > 0 ? (
+                displayTags.map((tag, index) => (
+                  <span key={index} className="text-xs px-2 py-1 bg-red-800 text-white">
+                    {tag}
+                  </span>
+                ))
+              ) : (
+                <>
+                  <span className="text-xs px-2 py-1 bg-red-800 text-white">
+                    {game.Genre || "ACTION"}
+                  </span>
+                  <span className="text-xs px-2 py-1 bg-red-800 text-white">
+                    {game.category || "ADVENTURE"}
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Other Games */}
+        {/* Related Games */}
         <div className="mt-12">
-          <div className="grid grid-cols-3 gap-4">
-            {gameData.length > 0 &&
-              gameData
-                .flatMap((det) => det.detail)
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 3) // Get only 3 random items
-                .map((item, i) => (
-                  <div key={i}>
-                    {" "}
-                    {/* Single parent div for each grid item */}
+          <h3 className="text-lg mb-4">Related Games</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {relatedGames.length > 0 ? (
+              relatedGames.map((relatedGame) => (
+                <Link href={`/game/${relatedGame._id}`} key={relatedGame._id}>
+                  <div className="cursor-pointer">
                     <div className="relative">
                       <Image
-                        src={item.img}
-                        alt={item.title}
+                        src={relatedGame.url || "/placeholder-game.jpg"}
+                        alt={relatedGame.title}
                         width={300}
                         height={200}
-                        className="w-96 h-40"
+                        className="w-full h-40 object-cover"
                         unoptimized
                       />
                       <div className="absolute bottom-0 left-0 bg-red-600 text-white text-xs px-2 py-1">
-                        RECOMMENDED
+                        {relatedGame.status || "RECOMMENDED"}
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-sm mt-1">{item.title}</h3>
-                      <div className="text-xs text-gray-400">{item.date}</div>
+                      <h3 className="text-sm mt-1">{relatedGame.title}</h3>
+                      <div className="text-xs text-gray-400">
+                        {new Date(relatedGame.releaseDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </div>
                     </div>
                   </div>
-                ))}
+                </Link>
+              ))
+            ) : (
+              // Fallback if no related games are available
+              <div className="col-span-3 text-center text-gray-400">
+                No related games available
+              </div>
+            )}
           </div>
         </div>
 
         {/* Comments */}
         <div className="mt-12">
-          <h3 className="text-lg">5 Comments</h3>
+          <h3 className="text-lg">{dummyContent.comments.length} Comments</h3>
 
           <div className="mt-4">
-            {[1, 2, 3, 4, 5].map((comment) => (
-              <div key={comment} className="border-b border-gray-800 py-4">
+            {dummyContent.comments.map((comment) => (
+              <div key={comment.id} className="border-b border-gray-800 py-4">
                 <div className="flex">
                   <div className="w-10 h-10 bg-purple-600 flex items-center justify-center rounded">
-                    <span className="text-white">MC</span>
+                    <span className="text-white">A</span>
                   </div>
                   <div className="ml-4">
                     <div className="text-sm">
-                      Anonymous • February 28, 2025 at 10:24 pm
+                      {comment.user} • {comment.date}
                     </div>
                     <div className="mt-2 text-sm">
-                      {comment === 1 && "Mega link for Mac is broken."}
-                      {comment === 2 && "Good new update."}
-                      {comment === 3 &&
-                        "Hello, bad game with poor renders and sandbox good from last, dont bullshit."}
-                      {comment === 4 &&
-                        "Do you have saved game file that is caught up to best update or near it??"}
-                      {comment === 5 &&
-                        "How do I change game resolution since I have a small screen?"}
+                      {comment.text}
                     </div>
                     <div className="mt-1">
                       <button className="text-gray-400 text-sm">Reply</button>
@@ -356,13 +401,7 @@ export default function SingleGame() {
           <textarea
             className="w-full bg-gray-900 border border-gray-700 p-4 text-white"
             rows={5}
-            placeholder="Your comment
-            (max. 2000 characters)"
-          />
-          <textarea
-            className="w-full bg-gray-900 border border-gray-700 p-4 text-white"
-            rows={5}
-            placeholder="Write your comment here..."
+            placeholder="Write your comment here... (max. 2000 characters)"
           ></textarea>
 
           <input
